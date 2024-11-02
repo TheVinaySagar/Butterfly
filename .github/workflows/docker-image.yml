@@ -1,0 +1,22 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Log in to GitHub Container Registry
+      run: echo "${{ secrets.CR_PAT }}" | docker login ghcr.io -u TheVinaySagar --password-stdin
+
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag ghcr.io/thevinaysagar/butterfly_species_classification/my-image-name:latest
+    - name: Push the Docker image
+      run: docker push ghcr.io/thevinaysagar/butterfly_species_classification/my-image-name:latest

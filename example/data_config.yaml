@@ -1,0 +1,5 @@
+input_shape: [224,224, 3]
+resize_shape: [224, 224]
+target_size: [224,224]
+images_base_path: '../Butterfly_Classification/Butterfly_Dataset/train'
+targets: ['beach', 'city', 'sunset', 'trees']
