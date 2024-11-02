@@ -14,7 +14,7 @@ sys.path.append(
 )
 
 # Import the ImagePredictor class from the Butterfly_Classification module
-from P.predictor import ImagePredictor
+from Model_pipeline.predictor import ImagePredictor
 
 # Initialize the FastAPI app
 app = FastAPI()

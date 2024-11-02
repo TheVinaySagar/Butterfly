@@ -17,6 +17,7 @@ RUN pip install --no-cache-dir --upgrade pip && \
 COPY . .
 
 ENV MODEL_PATH=/app/app/h5_models/VGG16_model.h5
+ENV MODEL_PATH=/app/app/P
 
 ENV PYTHONPATH=/app
 
