@@ -1,4 +1,4 @@
-model_path: "/app/app/h5_models/VGG16_model.h5"
+model_path: "h5_models/VGG16_model.h5"
 #/app/app/  for docker config
 
 resize_shape: [224,224]

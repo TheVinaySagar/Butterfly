@@ -29,7 +29,7 @@ async def read_root():
     """
     Serve the index.html file as the main page of the application.
     """
-    with open("/app/app/index.html", "r") as f:
+    with open("index.html", "r") as f:
         #/app/app/
         return f.read()
 
