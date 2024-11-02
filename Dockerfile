@@ -17,10 +17,8 @@ RUN pip install --no-cache-dir --upgrade pip && \
 COPY . .
 
 ENV MODEL_PATH=/app/app/h5_models/VGG16_model.h5
-COPY app/static /app/app/static
-# ENV MODEL_PATH=/app/app/static/css/style.css
-# ENV MODEL_PATH=/app/app/static/icon/favicon.ico
-# ENV MODEL_PATH=/app/app/static/js/client.js
+RUN mkdir -p /app/app/static/css /app/app/static/js /app/app/static/icons
+RUN chmod -R 755 /app/app/static
 
 
 ENV PYTHONPATH=/app

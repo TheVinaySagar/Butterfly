@@ -18,7 +18,8 @@ from Model_pipeline.predictor import ImagePredictor
 
 # Initialize the FastAPI app
 app = FastAPI()
-app.mount("/app/app/static", StaticFiles(directory="/app/app/static"), name="static")
+app.mount("/static", StaticFiles(directory=os.path.join(os.path.dirname(__file__), "static")), name="static")
+
 
 # Mount static files directory to serve static assets
 # app.mount("/static", StaticFiles(directory="static"), name="static")
