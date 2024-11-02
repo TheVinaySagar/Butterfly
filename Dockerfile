@@ -16,9 +16,9 @@ RUN pip install --no-cache-dir --upgrade pip && \
 
 COPY . .
 
-RUN python -c "import os; assert os.path.exists('app/Custom_CNN_Model.h5'), 'Model file not found'"
+# RUN python -c "import os; assert os.path.exists('app/Custom_CNN_Model.h5'), 'Model file not found'"
 
-ENV MODEL_PATH=/app/app/Custom_CNN_Model.h5
+ENV MODEL_PATH=/app/app/h5_models/VGG16_model.h5
 
 ENV PYTHONPATH=/app
 
