@@ -21,7 +21,7 @@ This project uses the [Butterfly Image Classification Dataset](https://www.kaggl
 To use the dataset:
 1. Download from Kaggle: [Download Dataset](https://www.kaggle.com/datasets/phucthaiv02/butterfly-image-classification)
 2. Accept the dataset terms and conditions
-3. Place the downloaded data in the `Butterfly_Classification\Butterfly_Classification\Dataset` directory of the project
+3. Place the downloaded data in the `Butterfly_Classification\Butterfly_Classification\Butterfly_Dataset` directory of the project
 
 ## 🛠️ Tech Stack
 
@@ -49,8 +49,8 @@ docker run -p 8000:8000 ghcr.io/thevinaysagar/butterfly_species_classification/m
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/TheVinaySagar/Butterfly_Species_Classification.git
-cd Butterfly_Species_Classification
+git clone https://github.com/TheVinaySagar/Butterfly.git
+cd Butterfly
 ```
 
 2. Create and activate virtual environment:
@@ -93,7 +93,7 @@ Once the application is running, access the API documentation at:
 ```python
 import requests
 
-url = "https://butterfly-species-classification.onrender.com/"
+url = "https://butterflyworld.onrender.com/"
 files = {"file": open("butterfly_image.jpg", "rb")}
 response = requests.post(url, files=files)
 prediction = response.json()
@@ -109,106 +109,6 @@ The project implements a comprehensive machine learning pipeline:
 4. Inference Pipeline
 5. API Integration
 6. Deployment Pipeline
-
-<!-- ## 🧠 Model Architectures -->
-
-<!-- ### Base CNN Model
-
-The project uses a Convolutional Neural Network (CNN) with the following architecture:
-
-```
-Model: "sequential"
-_________________________________________________________________
-Layer (type)                Output Shape              Param #   
-=================================================================
-conv2d (Conv2D)             (None, 148, 148, 32)      896       
-batch_normalization         (None, 148, 148, 32)      128       
-max_pooling2d              (None, 74, 74, 32)        0         
-                                                                 
-conv2d_1 (Conv2D)          (None, 72, 72, 64)        18496     
-batch_normalization_1      (None, 72, 72, 64)        256       
-max_pooling2d_1           (None, 36, 36, 64)        0         
-                                                                 
-conv2d_2 (Conv2D)          (None, 34, 34, 128)       73856     
-batch_normalization_2      (None, 34, 34, 128)       512       
-=================================================================
-Total params: 94,144
-Trainable params: 93,696
-Non-trainable params: 448
-```
-
-### Model Details
-
-The model architecture consists of three main convolutional blocks:
-
-1. **First Convolutional Block**
-   - Conv2D: 32 filters, 3×3 kernel
-   - Batch Normalization
-   - MaxPooling: 2×2 pool size
-   - Input Shape: (150, 150, 3)
-
-2. **Second Convolutional Block**
-   - Conv2D: 64 filters, 3×3 kernel
-   - Batch Normalization
-   - MaxPooling: 2×2 pool size
-
-3. **Third Convolutional Block**
-   - Conv2D: 128 filters, 3×3 kernel
-   - Batch Normalization
-
-### Key Features
-
-- **Batch Normalization**: Used after each convolution layer to stabilize training
-- **MaxPooling**: Reduces spatial dimensions and computational load
-- **Progressive Filter Increase**: 32 → 64 → 128 filters
-- **Input Processing**: Accepts 150×150×3 RGB images
-
-### Training Configuration
-
-```python
-model.compile(
-    optimizer='adam',
-    loss='categorical_crossentropy',
-    metrics=['accuracy']
-)
-```
-
-- **Optimizer**: Adam
-- **Loss Function**: Categorical Crossentropy
-- **Batch Size**: 32
-- **Epochs**: 50
-- **Validation Split**: 0.2
-
-### Model Visualization
-
-<div align="center">
-  <img src="Custom_CNN_Model_Architecture.png" alt="Model Architecture">
-</div>
-
-### Performance Metrics
-
-| Metric | Value |
-|--------|--------|
-| Training Accuracy | 95.2% |
-| Validation Accuracy | 93.8% |
-| Test Accuracy | 92.7% |
-
-### Data Augmentation
-
-During training, we applied the following augmentation techniques:
-```python
-data_augmentation = Sequential([
-    RandomFlip("horizontal"),
-    RandomRotation(0.2),
-    RandomZoom(0.2),
-])
-```
-
-### Model Size
-
-- Full Model Size: ~1.1 MB
-- Quantized Model Size: ~300 KB
- -->
 
 ## 🧠 Model Architecture
 
@@ -286,7 +186,7 @@ Non-trainable params: 960
 - **Total Parameters**: 560,395
 - **Trainable Parameters**: 559,435
 - **Non-trainable Parameters**: 960
-- **Input Shape**: (150, 150, 3)
+- **Input Shape**: (224,224, 3)
 - **Output Classes**: 75 butterfly species
 
 ### Key Features
@@ -345,10 +245,150 @@ data_augmentation = Sequential([
 | Accuracy | 89.5% | 80% |
 | Loss | 0.530 | 1.04 |
 
+
+### 2. Deep Transfer Learning Model Overview
+
+The model implements a fine-tuned VGG16 architecture with custom classification layers for butterfly species classification. The model leverages pre-trained weights while customizing the later layers for our specific task.
+
+```
+Model: "sequential_6"
+_________________________________________________________________
+Layer (type)                Output Shape              Param #   
+=================================================================
+sequential_5 (Sequential)   (None, 224, 224, 3)       0         
+                                                                 
+vgg16 (Functional)         (None, 7, 7, 512)         14,714,688
+                                                                 
+flatten_3 (Flatten)        (None, 25088)             0         
+                                                                 
+dense_6 (Dense)            (None, 512)               12,845,568
+                                                                 
+dropout_3 (Dropout)        (None, 512)               0         
+                                                                 
+dense_7 (Dense)            (None, 75)                38,475    
+=================================================================
+Total params: 27,598,731
+Trainable params: 19,963,467
+Non-trainable params: 7,635,264
+```
+
+### Architecture Details
+
+#### Pre-trained VGG16 Base
+- Modified VGG16 architecture with only 5 trainable layers
+- First 4 layers frozen to preserve low-level feature extraction
+- Output shape: 7×7×512
+
+#### Custom Classification Head
+1. **Flatten Layer**
+   - Converts 3D feature maps to 1D vector
+   - Output: 25,088 features
+
+2. **Dense Layer**
+   - 512 units with ReLU activation
+   - Trainable weights: 12.8M parameters
+
+3. **Dropout Layer**
+   - Rate: 0.5
+   - For regularization and preventing overfitting
+
+4. **Output Layer**
+   - 75 units (one per butterfly species)
+   - Softmax activation
+
+### Model Properties
+
+- **Total Parameters**: 27.6M
+- **Trainable Parameters**: 20M
+- **Non-trainable Parameters**: 7.6M
+- **Input Shape**: (224, 224, 3)
+- **Output Classes**: 75 butterfly species
+
+### Key Features
+
+1. **Transfer Learning Strategy**
+   - Leverages pre-trained VGG16 weights
+   - Only 5 layers fine-tuned for butterfly classification
+   - First 4 VGG16 layers frozen to preserve learned features
+
+2. **Memory and Computation Optimization**
+   - Selective layer training reduces computational overhead
+   - Maintains robust feature extraction from VGG16
+   - Efficient parameter utilization with frozen layers
+
+3. **Regularization Techniques**
+   - Dropout layer prevents overfitting
+   - Transfer learning acts as implicit regularization
+   - Reduced number of trainable parameters compared to full fine-tuning
+
+### Training Configuration
+
+```python
+model.compile(
+    optimizer=tf.keras.optimizers.Adam(learning_rate=0.001),
+    loss='categorical_crossentropy',
+    metrics=['accuracy', tf.keras.metrics.TopKCategoricalAccuracy(k=5)]
+)
+```
+
+### Data Preprocessing
+
+```python
+data_augmentation = Sequential([
+    tf.keras.layers.RandomFlip("horizontal"),
+    tf.keras.layers.RandomRotation(0.2),
+   #  tf.keras.layers.RandomZoom(0.2),
+   #  tf.keras.layers.RandomBrightness(0.2),
+   #  tf.keras.layers.RandomContrast(0.2),
+])
+```
+
+### VGG16 Layer Configuration
+
+```python
+conv_base = VGG16(
+    weights='imagenet',
+    include_top = False,
+    input_shape=image_shape
+)
+# Freeze first 4 layers
+set_trainable = False
+for layer in conv_base.layers:
+  if layer.name == 'block5_conv1':
+    set_trainable = True
+  if set_trainable:
+    layer.trainable = True
+  else:
+    layer.trainable = False
+
+for layer in conv_base.layers:
+  print(layer.name,layer.trainable)
+# Keep last 5 layers trainable for fine-tuning
+```
+
+### Model Architecture Diagram
+
+<div align="center">
+  <img src="/images/VGG16_Architecture.png" alt="CNN Architecture">
+</div>
+
+### Loss and Accuracy Curves
+
+<div align="center">
+  <img src="/images/VGG16_L&A_curve.png" alt="Training and Validation Curves">
+</div>
+
+### Performance Metrics
+
+| Metric | Train | Validation |
+|--------|--------|------------|
+| Accuracy | 0.929 | 0.877 |
+| Loss | 0.243 | 0.472 |
+
 ## 🌐 Deployment
 
 The application is deployed on Render and can be accessed at:
-[Live Link](https://butterfly-species-classification.onrender.com/)
+[Live Link](https://butterflyworld.onrender.com/)
 
 ### Deployment Steps
 
@@ -454,9 +494,9 @@ If you use this project in your research, please cite:
 
 ```
 @software{butterfly_classifier,
-  author = {Your Name},
+  author = {Vinay Sagar},
   title = {Butterfly Species Classifier},
   year = {2024},
-  url = {https://github.com/TheVinaySagar/Butterfly_Species_Classification.git}
+  url = {https://github.com/TheVinaySagar/Butterfly.git}
 }
 ```
