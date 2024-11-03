@@ -21,7 +21,7 @@ This project uses the [Butterfly Image Classification Dataset](https://www.kaggl
 To use the dataset:
 1. Download from Kaggle: [Download Dataset](https://www.kaggle.com/datasets/phucthaiv02/butterfly-image-classification)
 2. Accept the dataset terms and conditions
-3. Place the downloaded data in the `Butterfly_Classification\Butterfly_Classification\Butterfly_Dataset` directory of the project
+3. Place the downloaded data in the `.\Butterfly_Classification\Butterfly_Dataset` directory of the project
 
 ## 🛠️ Tech Stack
 
