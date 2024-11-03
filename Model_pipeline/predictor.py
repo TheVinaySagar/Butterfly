@@ -64,7 +64,7 @@ class ImagePredictor:
         Returns:
             dict: A dictionary containing the predicted class name.
         """
-        input_shape = (150,150)  # Define the input shape for the model
+        input_shape = (224,224)  # Define the input shape for the model
         arr = resize_img(arr, input_shape)  # Resize the input image
         arr = self.pre_processing_function(arr)  # Preprocess the image
         
