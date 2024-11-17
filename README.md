@@ -4,7 +4,7 @@ An end-to-end machine learning project that predicts butterfly species from imag
 
 ## 🌟 Features
 
-- Image-based butterfly species classification
+- Image-based butterfly species
 - RESTful API for predictions
 - Containerized application using Docker
 - Complete ML pipeline from data preprocessing to model deployment
